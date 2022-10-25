@@ -14,7 +14,6 @@ RUN gradle clean build -x test
     
 # actual container
 FROM adoptopenjdk/openjdk11:alpine-jre
-RUN echo "$PWD"
 ENV ARTIFACT_NAME=resource-srv-0.0.1-SNAPSHOT.jar
 ENV APP_HOME=/usr/app
     
