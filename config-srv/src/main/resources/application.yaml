@@ -1,6 +1,8 @@
 server:
   port: '8888'
 spring:
+  application:
+    name: 'config-srv'
   rabbitmq:
     password: guest
     port: '5672'

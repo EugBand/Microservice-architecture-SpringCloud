@@ -30,5 +30,7 @@ server:
   port: '8090'
 eureka:
   client:
-    service-url:
-      defaultZone: 'http://localhost:8761/eureka/'
+    serviceUrl:
+      defaultZone: ${EUREKA_URI:http://host.docker.internal:8761/eureka}
+    instance:
+      preferIpAddress: true

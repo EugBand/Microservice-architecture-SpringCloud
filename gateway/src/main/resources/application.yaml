@@ -2,4 +2,10 @@ server:
   port: 8080
 spring:
   application:
-    name: proxy
+    name: 'gateway'
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: ${EUREKA_URI:http://host.docker.internal:8761/eureka}
+    instance:
+      preferIpAddress: true
