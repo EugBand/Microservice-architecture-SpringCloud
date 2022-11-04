@@ -12,13 +12,15 @@ import java.lang.annotation.Target;
 /**
  * Validation annotation for UUID.
  */
-@Pattern(regexp = "^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+@Pattern(regexp = UUID.UUID_REGEXP,
         message = "Not a valid UUID")
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ ElementType.FIELD, ElementType.PARAMETER })
 @Constraint(validatedBy = {})
 @Documented
 public @interface UUID {
+
+    String UUID_REGEXP = "^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$";
 
     /**
      * Message.

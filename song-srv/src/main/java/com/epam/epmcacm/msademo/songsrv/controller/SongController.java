@@ -32,7 +32,7 @@ public class SongController {
     @GetMapping("/{songId}")
     public MetadataDto getMetadata(
             @PathVariable @UUID String songId) {
-        return service.getMetadata(songId);
+        return service.fetchMetadata(songId);
     }
 
     @DeleteMapping

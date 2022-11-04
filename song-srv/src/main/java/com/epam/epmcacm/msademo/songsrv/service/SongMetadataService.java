@@ -4,6 +4,7 @@ import com.epam.epmcacm.msademo.songsrv.dto.MetadataDto;
 import com.epam.epmcacm.msademo.songsrv.exception.entity.SongMetadata;
 import com.epam.epmcacm.msademo.songsrv.exception.BadRequestException;
 import com.epam.epmcacm.msademo.songsrv.repository.SongMetadataRepository;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,6 +16,7 @@ import java.util.UUID;
 
 @Service
 @Slf4j
+@AllArgsConstructor
 public class SongMetadataService {
 
     @Autowired
@@ -31,7 +33,7 @@ public class SongMetadataService {
         return id;
     }
 
-    public MetadataDto getMetadata(String id){
+    public MetadataDto fetchMetadata(String id){
         Optional<SongMetadata> songMetadataOptional = songMetadataRepository.findById(id);
         log.info("Get song metadata for id: {}", id);
         SongMetadata songMetadata = songMetadataOptional

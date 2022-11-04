@@ -1,0 +1,33 @@
+plugins {
+	id 'org.springframework.boot' version '2.7.5'
+	id 'io.spring.dependency-management' version '1.0.15.RELEASE'
+	id 'java'
+}
+
+//configurations.all { resolutionStrategy {
+//	force 'org.codehaus.groovy:groovy-all: 4.0.1';
+//} }
+
+group = 'com.epam.epmcacm.msademo'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '11'
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+	implementation 'org.springframework.boot:spring-boot-starter'
+	developmentOnly 'org.springframework.boot:spring-boot-devtools'
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	testImplementation 'io.rest-assured:rest-assured:4.1.2'
+//	testImplementation 'org.hamcrest:hamcrest-library:2.2'
+	testImplementation 'org.junit.vintage:junit-vintage-engine:5.9.1'
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: '5.9.1'
+
+}
+
+tasks.named('test') {
+	useJUnitPlatform()
+}
