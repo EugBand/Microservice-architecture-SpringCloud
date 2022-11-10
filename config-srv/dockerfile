@@ -10,16 +10,16 @@ RUN chown -R gradle /home/gradle/src
     
 RUN gradle build || return 0
 COPY . .
-RUN gradle clean build
+RUN gradle clean build -x test
     
 # actual container
 FROM adoptopenjdk/openjdk11:alpine-jre
 ENV ARTIFACT_NAME=config-srv-0.0.1-SNAPSHOT.jar
-ENV APP_HOME=/usr/app/
+ENV APP_HOME=/usr/app
     
 WORKDIR $APP_HOME
 COPY --from=TEMP_BUILD_IMAGE $APP_HOME/build/libs/$ARTIFACT_NAME .
     
-EXPOSE 8080
+EXPOSE 8888
 ENTRYPOINT exec java -jar ${ARTIFACT_NAME}
 

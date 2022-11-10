@@ -24,16 +24,23 @@ public class S3Config {
     @Value("${s3.region.name}")
     String regionName;
 
+    @Value("${cloud.aws.s3-bucket-name}")
+    private String s3BucketName;
+
     @Bean
     public AmazonS3 generateS3Client() {
        AWSCredentials credentials = new BasicAWSCredentials(accessKey,accessSecret);
         Region region = Region.getRegion(Regions.fromName(regionName));
         AwsClientBuilder.EndpointConfiguration endpoint = new AwsClientBuilder.EndpointConfiguration(endpointUrl, region.getName());
-        return AmazonS3ClientBuilder
+        AmazonS3 client = AmazonS3ClientBuilder
                 .standard()
                 .withEndpointConfiguration(endpoint)
                 .withCredentials(new AWSStaticCredentialsProvider(credentials))
                 .enablePathStyleAccess()
                 .build();
+        if (client.listBuckets().stream().noneMatch(it -> it.getName().equals(s3BucketName))){
+            client.createBucket(s3BucketName);
+        }
+        return client;
     }
 }

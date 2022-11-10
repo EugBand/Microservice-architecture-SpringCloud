@@ -2,8 +2,8 @@ spring:
   application:
     name: 'song-srv'
   rabbitmq:
-    host: localhost
-    port: 5672
+    port: '5672'
+    host: ${RABBITMQ_NAME:localhost}
     username: guest
     password: guest
   cloud:

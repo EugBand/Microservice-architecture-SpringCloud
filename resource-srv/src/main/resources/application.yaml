@@ -3,9 +3,12 @@ spring:
     name: 'resource-srv'
   rabbitmq:
     port: '5672'
-    host: localhost
+    host: ${RABBITMQ_NAME:localhost}
     username: guest
     password: guest
+    queue:
+      create: createq
+      delete: deleteq
   cloud:
     bus:
       enabled: true
@@ -34,3 +37,16 @@ eureka:
       defaultZone: ${EUREKA_URI:http://localhost:8761/eureka}
     instance:
       preferIpAddress: true
+
+cloud:
+  aws:
+    s3-bucket-name: mp3-bucket
+    s3-mp3-folder: mp3
+s3:
+  access:
+    name: localstack
+    secret: localstack
+  endpoint:
+    url: ${S3_URL:http://localhost:4566}
+  region:
+    name: us-east-1

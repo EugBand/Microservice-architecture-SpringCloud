@@ -1,0 +1,12 @@
+version: '3'
+services:
+    song-srv:
+      build: .
+      ports: 
+      - '8092:8092'
+      networks:
+      - network-example
+networks:
+  network-example:
+    driver: bridge
+    external: true
