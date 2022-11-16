@@ -1,4 +1,4 @@
-package com.epam.epmcacm.msademo.resourcesrv.dto;
+package com.epam.epmcacm.msademo.storagesrv.Dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -11,10 +11,11 @@ import lombok.extern.jackson.Jacksonized;
 @Jacksonized
 @NoArgsConstructor
 @AllArgsConstructor
-public class ResourceDto {
+public class StorageDto {
 
-    private String id;
-    private String storageId;
     @Builder.Default
-    private byte[] mp3data = new byte[]{};
+    String id = "";
+    StorageType storageType;
+    String bucketName;
+    String path;
 }

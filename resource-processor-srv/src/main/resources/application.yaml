@@ -13,6 +13,11 @@ spring:
         enabled: true
     stream:
       bindings:
+        output-1:
+          destination: changeq
+          group: changeq
+          contentType: application/json
+          binder: rabbit
         sink-in-0:
           destination: createq
           contentType: application/json
@@ -24,6 +29,11 @@ spring:
           binder: rabbit
       rabbit:
         bindings:
+          Output-1:
+            consumer:
+              max-attempts: 3
+              autoBindDlq: true
+              dlqTtl: 5000
           isink-in-0:
             consumer:
               max-attempts: 3

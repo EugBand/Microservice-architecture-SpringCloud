@@ -1,4 +1,4 @@
-package com.epam.epmcacm.msademo.resourcesrv.configuration;
+package com.epam.epmcacm.msademo.storagesrv.configuration;
 
 import com.amazonaws.auth.AWSCredentials;
 import com.amazonaws.auth.AWSStaticCredentialsProvider;
@@ -12,7 +12,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-
 @Configuration
 public class S3Config {
     @Value("${s3.access.name}")
@@ -24,12 +23,9 @@ public class S3Config {
     @Value("${s3.region.name}")
     String regionName;
 
-    @Value("${cloud.aws.s3-bucket-name}")
-    private String s3BucketName;
-
     @Bean
     public AmazonS3 generateS3Client() {
-       AWSCredentials credentials = new BasicAWSCredentials(accessKey,accessSecret);
+        AWSCredentials credentials = new BasicAWSCredentials(accessKey,accessSecret);
         Region region = Region.getRegion(Regions.fromName(regionName));
         AwsClientBuilder.EndpointConfiguration endpoint = new AwsClientBuilder.EndpointConfiguration(endpointUrl, region.getName());
         AmazonS3 client = AmazonS3ClientBuilder
@@ -38,9 +34,7 @@ public class S3Config {
                 .withCredentials(new AWSStaticCredentialsProvider(credentials))
                 .enablePathStyleAccess()
                 .build();
-//        if (client.listBuckets().stream().noneMatch(it -> it.getName().equals(s3BucketName))){
-//            client.createBucket(s3BucketName);
-//        }
         return client;
     }
 }
+

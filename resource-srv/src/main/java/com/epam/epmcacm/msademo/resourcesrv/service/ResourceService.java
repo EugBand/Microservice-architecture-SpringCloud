@@ -1,17 +1,26 @@
 package com.epam.epmcacm.msademo.resourcesrv.service;
 
+import com.epam.epmcacm.msademo.resourcesrv.dto.ResourceDto;
+import com.epam.epmcacm.msademo.resourcesrv.dto.StorageDto;
+import com.epam.epmcacm.msademo.resourcesrv.dto.StorageType;
 import com.epam.epmcacm.msademo.resourcesrv.entity.Resource;
 import com.epam.epmcacm.msademo.resourcesrv.exception.BadRequestException;
 import com.epam.epmcacm.msademo.resourcesrv.exception.FileProcessingException;
+import com.epam.epmcacm.msademo.resourcesrv.mapper.ResourceMapper;
+import io.github.resilience4j.circuitbreaker.CircuitBreaker;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.awt.print.Book;
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
+import java.util.function.Function;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 import static com.amazonaws.services.mediaconvert.model.AudioCodec.MP3;
@@ -30,53 +39,68 @@ public class ResourceService {
 
     public static final String IS_NOT_OF_MP_3_FORMAT = "Provided file is not of mp3 format";
 
-    @Autowired H2DBService dbService;
+    @Autowired DBService dbService;
 
-    @Autowired AwsS3Service s3FileService;
+    @Autowired S3Service s3FileService;
 
     @Autowired RMQPublisherService publisher;
 
-    public String createResource(MultipartFile multipartFile, String fileName) {
+    @Autowired ResourceMapper mapper;
+
+    @Autowired StorageService storageService;
+
+    public ResourceDto createResource(MultipartFile multipartFile) {
         if(!validateIfMp3File(multipartFile)) {
             throw new BadRequestException(IS_NOT_OF_MP_3_FORMAT);
         }
+
+        StorageDto stagingStorageDto = storageService.fetchStorageByType(StorageType.STAGING);
         String id = UUID.randomUUID().toString();
-        dbService.addResourceData(id, fileName);
+        String storageId = stagingStorageDto.getId();
+        dbService.addResourceData(id, storageId);
         String resourceId;
+        String bucketName = stagingStorageDto.getBucketName();
+        String path = stagingStorageDto.getPath();
         try {
-            resourceId = s3FileService.upLoadMp3(multipartFile, id);
+            resourceId = s3FileService.upLoadFile(multipartFile, id, bucketName, path);
         } catch (IOException e) {
             log.error(ERROR_UPLOADING_MP3_FILE + e.getMessage());
             deleteResources(List.of(id));
             throw new FileProcessingException(ERROR_UPLOADING_MP3_FILE + e.getMessage(), e);
         }
-        publisher.publishCreationEvent(resourceId);
+        ResourceDto resourceDto = ResourceDto.builder()
+                .id(resourceId)
+                .storageId(storageId)
+                .build();
+        publisher.publishCreationEvent(resourceDto);
         log.info("resource created with path: {}", resourceId);
-        return resourceId;
+        return resourceDto;
     }
 
-    public Resource getResource(String id) {
+    public ResourceDto getResource(String id) {
         Resource resource = dbService.getResourceData(id);
-            try {
-               resource.setMp3data(s3FileService.downLoadMp3(resource.getId()));
-            } catch (IOException e) {
-                log.error(ERROR_DOWNLOADING_MP_3_FILE + e.getMessage());
-                throw new FileProcessingException(ERROR_DOWNLOADING_MP_3_FILE + e.getMessage(), e);
-            };
+        String storageId = resource.getStorageId();
+        StorageDto storageDto = storageService.fetchStorageByStorageId(storageId);
+        ResourceDto resourceDto = mapper.toDto(resource);
+        String resourceId = resource.getId();
+        String bucketName = storageDto.getBucketName();
+        String path = storageDto.getPath();
+        resourceDto.setMp3data(s3FileService.downLoadFile(resourceId, bucketName, path));
         log.info("Get resource for id: {}", id);
-        return resource;
+        return resourceDto;
     }
 
     public List<String> deleteResources(List<String> ids) {
         log.info("Resources metadata deleted for {} records", ids.size());
+        List<StorageDto> storageDtos = storageService.getStorages();
+        Map<String, StorageDto> resourceMap = ids.stream().collect(Collectors.toMap(Function.identity(),
+                id -> storageDtos.stream()
+                    .filter(s -> s.getId().equals(dbService.getResourceData(id).getStorageId()))
+                    .findFirst()
+                    .orElseThrow(() -> new BadRequestException("Wrond storage id"))));
         List<String> deletedDbResources = dbService.deleteResources(ids);
-        List<String> deletedS3Resources = ids.stream().map(id -> s3FileService.deleteMp3(id)).collect(Collectors.toList());
-        if (deletedDbResources != deletedS3Resources) {
-            throw new BadRequestException(
-                    String.format(MISMATCH_COUNT + " %s", deletedS3Resources.size(),
-                            deletedDbResources.size()));
-        }
-        return deletedS3Resources;
+        resourceMap.forEach((id, storage) -> s3FileService.deleteFile(id, storage.getBucketName(), storage.getPath()));
+        return ids;
     }
 
     private boolean validateIfMp3File(final MultipartFile file) {

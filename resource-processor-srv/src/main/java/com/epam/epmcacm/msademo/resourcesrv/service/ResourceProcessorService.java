@@ -27,6 +27,7 @@ public class ResourceProcessorService {
 
     public static final String ERROR_PARSE_MP3_METADATA = "Error parse mp3 metadata";
 
+    //Non-prod endpoint
     public MetadataDto getMetadata(MultipartFile multipartFile){
         ContentHandler handler = new DefaultHandler();
         Metadata metadata = new Metadata();
@@ -49,6 +50,7 @@ public class ResourceProcessorService {
         return new MetadataDto(metadata);
     }
 
+    //Non-prod endpoint
     public MetadataDto getMetadata(byte[] fileContent){
         ContentHandler handler = new DefaultHandler();
         Metadata metadata = new Metadata();

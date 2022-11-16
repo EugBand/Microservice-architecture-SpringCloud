@@ -20,16 +20,21 @@ public class RMQConsumerService {
 
     @Autowired
     SongService songService;
+
+    @Autowired
+    RMQPublisherService publisher;
     @Autowired
     ResourceProcessorService resourceProcessorService;
 
     @Bean
-    public Consumer<String> sink(){
+    public Consumer<ResourceDto> sink(){
         return value ->  {
+            log.info("resource processor starts to process resource with id {}", value.getId());
             ResourceDto resourceDto = resourceService.getResource(value);
             MetadataDto metadata = resourceProcessorService.getMetadata(resourceDto.getMp3data());
             String postedResourceId = songService.postMetadata(metadata);
             log.info("resource with id {} posted", postedResourceId);
+            publisher.publishChangingEvent(value);
         };
 
     }

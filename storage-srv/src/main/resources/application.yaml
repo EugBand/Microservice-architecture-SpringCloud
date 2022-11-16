@@ -1,0 +1,32 @@
+spring:
+  application:
+    name: 'storage-srv'
+  rabbitmq:
+    port: '5672'
+    host: ${RABBITMQ_NAME:localhost}
+    username: guest
+    password: guest
+    queue:
+      create: createq
+      delete: deleteq
+  cloud:
+    bus:
+      enabled: true
+      refresh:
+        enabled: true
+server:
+  port: '8093'
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: ${EUREKA_URI:http://localhost:8761/eureka}
+    instance:
+      preferIpAddress: true
+s3:
+  access:
+    name: localstack
+    secret: localstack
+  endpoint:
+    url: ${S3_URL:http://localhost:4566}
+  region:
+    name: us-east-1

@@ -1,0 +1,38 @@
+plugins {
+	id 'java'
+	id 'org.springframework.boot' version '2.7.6-SNAPSHOT'
+	id 'io.spring.dependency-management' version '1.0.15.RELEASE'
+}
+
+group = 'com.epam.epmcacm.msademo'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '11'
+
+repositories {
+	mavenCentral()
+	maven { url 'https://repo.spring.io/milestone' }
+	maven { url 'https://repo.spring.io/snapshot' }
+}
+
+dependencies {
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-netflix-eureka-client', version: '3.1.4'
+//	implementation 'org.springframework.boot:spring-boot-starter-amqp'
+//	implementation 'org.springframework.cloud:spring-cloud-stream'
+//	implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-bus-amqp', version: '3.1.2'
+//	implementation group: 'org.springframework.cloud', name: 'spring-cloud-stream-binder-rabbit', version: '3.2.5'
+	implementation group: 'com.amazonaws', name: 'aws-java-sdk-s3', version: '1.12.314'
+	implementation 'org.mapstruct:mapstruct:1.5.3.Final'
+	annotationProcessor 'org.mapstruct:mapstruct-processor:1.5.3.Final'
+	implementation group: 'org.projectlombok', name: 'lombok-mapstruct-binding', version: '0.1.0'
+	developmentOnly 'org.springframework.boot:spring-boot-devtools'
+	compileOnly 'org.projectlombok:lombok'
+	annotationProcessor 'org.projectlombok:lombok'
+	runtimeOnly 'com.h2database:h2'
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+}
+
+tasks.named('test') {
+	useJUnitPlatform()
+}

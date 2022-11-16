@@ -1,12 +1,10 @@
 package com.epam.epmcacm.msademo.resourcesrv.controller;
 
 import com.epam.epmcacm.msademo.resourcesrv.dto.ResourceDto;
-import com.epam.epmcacm.msademo.resourcesrv.entity.Resource;
 import com.epam.epmcacm.msademo.resourcesrv.service.ResourceService;
 import com.epam.epmcacm.msademo.resourcesrv.validation.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cloud.stream.annotation.EnableBinding;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -32,13 +30,13 @@ public class ResourceController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public String addResource(@RequestParam("file") MultipartFile file, @RequestParam("name") String name) throws IOException {
-        return service.createResource(file, name);
+    public ResourceDto addResource(@RequestParam("file") MultipartFile file) throws IOException {
+        return service.createResource(file);
     }
 
 
     @GetMapping("{id}")
-    public Resource getResource(@PathVariable @UUID String id) {
+    public ResourceDto getResource(@PathVariable @UUID String id) {
         return service.getResource(id);
     }
 

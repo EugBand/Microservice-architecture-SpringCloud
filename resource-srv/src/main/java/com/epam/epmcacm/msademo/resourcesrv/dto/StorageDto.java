@@ -11,10 +11,15 @@ import lombok.extern.jackson.Jacksonized;
 @Jacksonized
 @NoArgsConstructor
 @AllArgsConstructor
-public class ResourceDto {
+//@JsonInclude(JsonInclude.Include.NON_NULL)
+public class StorageDto {
 
-    private String id;
-    private String storageId;
     @Builder.Default
-    private byte[] mp3data = new byte[]{};
+    String id = "";
+    @Builder.Default
+    StorageType storageType = null;
+    @Builder.Default
+    String bucketName  = "";
+    @Builder.Default
+    String path = "";
 }

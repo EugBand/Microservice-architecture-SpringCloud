@@ -47,6 +47,16 @@ services:
       - RABBITMQ_NAME
       networks:
       - network-example
+    storage-srv:
+      build: storage-srv/.
+      ports:
+      - '8093:8093'
+      depends_on:
+      - eureka-srv
+      environment:
+      - EUREKA_URI
+      networks:
+      - network-example
     resource-srv:
       build: resource-srv/.
       ports: 

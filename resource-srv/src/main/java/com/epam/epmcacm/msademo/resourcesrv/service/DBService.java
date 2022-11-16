@@ -3,7 +3,6 @@ package com.epam.epmcacm.msademo.resourcesrv.service;
 import com.epam.epmcacm.msademo.resourcesrv.entity.Resource;
 import com.epam.epmcacm.msademo.resourcesrv.exception.BadRequestException;
 import com.epam.epmcacm.msademo.resourcesrv.repository.ResourceRepository;
-import com.epam.epmcacm.msademo.resourcesrv.validation.UUID;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,19 +13,20 @@ import java.util.Optional;
 
 @Service
 @Slf4j
-public class H2DBService {
+public class DBService {
 
     public static final String NOT_FOUND_IN_BD = "Resource with id %s not found in bd";
 
     @Autowired ResourceRepository resourceRepository;
 
-    public String addResourceData(String uuid, String fileName) {
-        Resource resourceDto = Resource.builder()
+    public String addResourceData(String uuid, String storageId) {
+        Resource resource = Resource.builder()
                 .id(uuid)
-                .filePath(fileName)
+//                .filePath(fileName)
                 .createdAt(Instant.now())
+                .storageId(storageId)
                 .build();
-        Resource savedResource = resourceRepository.save(resourceDto);
+        Resource savedResource = resourceRepository.save(resource);
         String savedResourceId = savedResource.getId();
         log.info("resource created with id: {}", uuid);
         return savedResourceId;

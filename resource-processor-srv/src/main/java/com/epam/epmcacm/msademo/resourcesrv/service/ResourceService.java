@@ -29,10 +29,10 @@ public class ResourceService {
         this.resourceApiClient = resourceApiClient;
     }
 
-    public ResourceDto getResource(String id) {
+    public ResourceDto getResource(ResourceDto resourceDto) {
         return resourceApiClient
                 .get()
-                .uri(id)
+                .uri(resourceDto.getId())
                 .retrieve()
                 .bodyToMono(ResourceDto.class)
                 .retryWhen(Retry.backoff(MAX_ATTEMPTS, REQUEST_TIMEOUT)

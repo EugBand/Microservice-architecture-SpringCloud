@@ -16,7 +16,7 @@ public class RMQPublisherService {
     private StreamBridge streamBridge;
 
 
-    public void publishCreationEvent(ResourceDto message) {
+    public void publishChangingEvent(ResourceDto message) {
         streamBridge.send(publisherBinding, message);
     }
 }

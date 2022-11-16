@@ -23,6 +23,7 @@ public class SongMetadataService {
     SongMetadataRepository songMetadataRepository;
 
     public String createMetadata(MetadataDto metadataDto){
+        log.info("Start creating metadata");
         SongMetadata songMetadata = SongMetadata.builder()
                 .metadata(metadataDto.getMetadata())
                 .id(UUID.randomUUID().toString())
@@ -34,6 +35,7 @@ public class SongMetadataService {
     }
 
     public MetadataDto fetchMetadata(String id){
+        log.info("Start fetching metadata");
         Optional<SongMetadata> songMetadataOptional = songMetadataRepository.findById(id);
         log.info("Get song metadata for id: {}", id);
         SongMetadata songMetadata = songMetadataOptional
@@ -43,6 +45,7 @@ public class SongMetadataService {
     }
 
     public List<String> deleteMetadatasByIds(List<String> ids){
+        log.info("Start deleting metadata");
         songMetadataRepository.deleteAllById(ids);
         log.info("Songs metadata deleted for {} records", ids.size());
         return ids;

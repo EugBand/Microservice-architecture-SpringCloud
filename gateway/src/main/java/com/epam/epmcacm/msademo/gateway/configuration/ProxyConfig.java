@@ -16,6 +16,9 @@ class ProxyConfig {
                 .route("song-route",
                         route -> route.path("/api/v1/songs/**")
                                 .uri("lb://song-srv"))
+                .route("storage-route",
+                        route -> route.path("/api/v1/storages/**")
+                                .uri("lb://storage-srv"))
                 .build();
     }
 }
