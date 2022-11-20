@@ -14,8 +14,8 @@ import lombok.extern.jackson.Jacksonized;
 public class StorageDto {
 
     @Builder.Default
-    String id = "";
-    StorageType storageType;
-    String bucketName;
-    String path;
+    private String id = "";
+    private StorageType storageType;
+    private String bucketName;
+    private String path;
 }

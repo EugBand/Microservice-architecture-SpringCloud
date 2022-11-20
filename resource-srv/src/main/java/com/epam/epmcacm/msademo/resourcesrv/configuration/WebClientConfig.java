@@ -7,7 +7,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 
 @Configuration
 public class WebClientConfig {
-    @Value("${storage-service.path}")
+    @Value("${api.storage.path}")
     private String storageServicePath;
 
     @Value("${proxy.url}")

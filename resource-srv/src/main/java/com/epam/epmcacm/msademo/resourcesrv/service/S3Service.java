@@ -34,19 +34,24 @@ public class S3Service {
     private static final String fileExtension = ".mp3";
 
     public String upLoadFile(MultipartFile mp3File, String resourceId, String s3BucketName, String path) throws IOException {
+        log.info("Start uploading file with id {}", resourceId);
         String fullPath = getFilePath(resourceId, path);
         File file = multipartToFile(mp3File, resourceId + fileExtension);
         amazonS3.putObject(s3BucketName, fullPath, file);
+        log.info("File with id {} uploaded", resourceId);
         return resourceId;
     }
 
     public byte[] downLoadFile(String resourceId, String s3BucketName, String path) {
+        log.info("Start downloading file with id {}", resourceId);
         String fullPath = getFilePath(resourceId, path);
         ObjectListing objectListing = amazonS3.listObjects(s3BucketName);
         if (objectListing.getObjectSummaries().stream().anyMatch(item -> item.getKey().equals(fullPath))) {
             S3Object s3object = amazonS3.getObject(s3BucketName, fullPath);
             try {
-                return s3object.getObjectContent().getDelegateStream().readAllBytes();
+                byte[] bytes = s3object.getObjectContent().getDelegateStream().readAllBytes();
+                log.info("File with id {} downloaded", resourceId);
+                return bytes;
             } catch (IOException e) {
                 log.error("Cant read file: {} from bucket: {}", fullPath, s3BucketName);
                 throw new FileProcessingException(ERROR_DOWNLOADING_MP_3_FILE + e.getMessage(), e);
@@ -63,7 +68,9 @@ public class S3Service {
 
 
     public String deleteFile(String resourceId, String s3BucketName, String path){
+        log.info("Start deleting file with id {}", resourceId);
         amazonS3.deleteObject(s3BucketName, getFilePath(resourceId, path));
+        log.info("File with id {} deleted", resourceId);
         return resourceId + fileExtension;
     }
 
@@ -71,14 +78,12 @@ public class S3Service {
         return s3Mp3Folder + File.separator + resourceId + fileExtension;
     }
 
-//    private String getFullFilePath(String resourceId, String buckedName){
-//        return buckedName + File.separator + s3Mp3Folder + File.separator + resourceId + fileExtension;
-//    }
 
     @NotNull
     private File multipartToFile(@NotNull MultipartFile multipart, String fileName)
             throws IOException {
         File convFile = new File(System.getProperty(JAVA_IO_TMPDIR) + File.separator + fileName);
+        log.info("Created temporary file {}", convFile.getPath());
         multipart.transferTo(convFile);
         return convFile;
     }

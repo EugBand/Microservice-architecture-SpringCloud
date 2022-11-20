@@ -3,9 +3,38 @@ server:
 spring:
   application:
     name: 'gateway-srv'
+#logging:
+#  level:
+#    org.springframework: TRACE
 eureka:
+  instance:
+    preferIpAddress: false
+    hostname: ${spring.application.name}
   client:
     serviceUrl:
       defaultZone: ${EUREKA_URI:http://localhost:8761/eureka}
-    instance:
-      preferIpAddress: true
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,prometheus
+  metrics:
+    export:
+      prometheus:
+        enabled: true
+    distribution:
+      percentiles-histogram:
+        "[http.server.requests]": true
+api:
+  resource:
+    path: ${RESOURCE_PATH:/api/v1/resources/}
+    url: ${RESOURCE_URL:http://localhost:8090}
+  processor:
+    path: ${PROCESSOR_PATH:/api/v1/processor/}
+    url: ${PROCESSOR_URL:http://localhost:8091}
+  song:
+    path: ${SONG_PATH:/api/v1/songs/}
+    url: ${SONG_URL:http://localhost:8092}
+  storage:
+    path: ${STORAGE_PATH:/api/v1/storages/}
+    url: ${STORAGE_URL:http://localhost:8093}

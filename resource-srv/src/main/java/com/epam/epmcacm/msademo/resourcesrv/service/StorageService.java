@@ -35,6 +35,7 @@ public class StorageService {
 
    @CircuitBreaker(name = "CircuitBreakerService", fallbackMethod = "getDefaultStorage")
     public StorageDto fetchStorageByType(StorageType storageType){
+       log.info("Start fetching storage with type {}", storageType);
         List<StorageDto> storageDtos = this.getStorages();
         return storageDtos.stream()
                 .filter(s -> s.getStorageType().equals(storageType)).findFirst()
@@ -42,6 +43,7 @@ public class StorageService {
     }
 
     public StorageDto fetchStorageByStorageId(String storageId){
+        log.info("Start fetching storage with id {}", storageId);
         List<StorageDto> storageDtos = this.getStorages();
         return storageDtos.stream().filter(s -> s.getId().equals(storageId))
                 .findFirst()
@@ -49,14 +51,20 @@ public class StorageService {
     }
 
     public List<StorageDto> getStorages() {
-        return storageApiClient
+        log.info("Start fetching storages");
+        List<StorageDto> storageDtos = storageApiClient
                 .get()
                 .retrieve()
-                .bodyToMono(new ParameterizedTypeReference<List<StorageDto>>() {})
+                .bodyToMono(new ParameterizedTypeReference<List<StorageDto>>() {
+
+                })
                 .retryWhen(Retry.backoff(MAX_ATTEMPTS, REQUEST_TIMEOUT)
                         .onRetryExhaustedThrow((retryBackoffSpec, retrySignal) -> {
-                            throw new ServiceAvailableException(FAILED_TO_PROCESS_AFTER_MAX_RETRIES, HttpStatus.SERVICE_UNAVAILABLE.value());}))
+                            throw new ServiceAvailableException(FAILED_TO_PROCESS_AFTER_MAX_RETRIES,
+                                    HttpStatus.SERVICE_UNAVAILABLE.value());
+                        }))
                 .block();
+        return storageDtos;
     }
 
     public StorageDto getDefaultStorage(Throwable t){

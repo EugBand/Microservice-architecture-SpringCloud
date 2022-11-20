@@ -59,6 +59,8 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-actuator'
 	implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-netflix-eureka-client', version: '3.1.4'
 	implementation 'io.cucumber:cucumber-java:7.9.0'
+	implementation 'io.micrometer:micrometer-registry-prometheus:1.10.0'
+	implementation 'org.springframework.cloud:spring-cloud-starter-sleuth:3.1.5'
 	compileOnly 'org.projectlombok:lombok'
 	compileOnly 'javax.validation:validation-api'
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'

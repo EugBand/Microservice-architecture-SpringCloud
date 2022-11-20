@@ -44,11 +44,32 @@ spring:
 server:
   port: '8091'
 
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: ${EUREKA_URI:http://localhost:8761/eureka}
+  instance:
+    hostName: ${spring.application.name}
+    preferIpAddress: false
+
 proxy:
   url: ${PROXY_URL:http://localhost:8080}
 
-resource-service:
-  path: '/api/v1/resources/'
+api:
+  resource:
+    path: ${RESOURCE_PATH:/api/v1/resources/}
+  song:
+    path: ${SONG_PATH:/api/v1/songs/}
 
-song-service:
-  path: '/api/v1/songs/'
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,prometheus
+  metrics:
+    export:
+      prometheus:
+        enabled: true
+    distribution:
+      percentiles-histogram:
+        "[http.server.requests]": true

@@ -28,6 +28,7 @@ public class RMQConsumerService {
     @Bean
     public Consumer<ResourceDto> sink() {
         return value -> {
+            log.info("Start changing resource type to permanent for res id {}", value.getId());
             StorageDto stagingStorageDto = storageService.fetchStorageByStorageId(value.getStorageId());
             StorageDto permanentStorageDto = storageService.fetchStorageByType(StorageType.PERMANENT);
             s3FileService.moveFile(value.getId(), stagingStorageDto, permanentStorageDto);

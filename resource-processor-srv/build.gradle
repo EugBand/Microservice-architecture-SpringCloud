@@ -25,8 +25,12 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-amqp'
 	implementation 'org.springframework.cloud:spring-cloud-stream'
 	implementation group: 'org.springframework.cloud', name: 'spring-cloud-stream-binder-rabbit', version: '3.2.5'
+	implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-netflix-eureka-client', version: '3.1.4'
 	implementation 'org.springframework.boot:spring-boot-starter-webflux'
 	implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-bus-amqp', version: '3.1.2'
+	implementation 'org.springframework.boot:spring-boot-starter-actuator'
+	implementation 'io.micrometer:micrometer-registry-prometheus:1.10.0'
+
 
 	compileOnly 'org.projectlombok:lombok'
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'

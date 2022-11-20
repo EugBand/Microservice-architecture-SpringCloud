@@ -2,9 +2,15 @@ spring:
   application:
     name: 'eureka-srv'
 eureka:
+  instance:
+    hostName: ${spring.application.name}
+    preferIpAddress: 'false'
   client:
     fetch-registry: 'false'
     register-with-eureka: 'false'
+    serviceUrl:
+      defaultZone: ${EUREKA_URI:http://localhost:8761/eureka}
+
 logging:
   level:
     com:
@@ -14,5 +20,17 @@ logging:
 server:
   port: '8761'
 
-  server:
-    wait-time-in-ms-when-sync-empty: 0
+#  server:
+#    wait-time-in-ms-when-sync-empty: 0
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,prometheus
+  metrics:
+    export:
+      prometheus:
+        enabled: true
+    distribution:
+      percentiles-histogram:
+        "[http.server.requests]": true

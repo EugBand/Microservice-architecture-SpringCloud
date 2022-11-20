@@ -8,10 +8,10 @@ import org.springframework.web.reactive.function.client.WebClient;
 @Configuration
 public class WebClientConfig {
 
-    @Value("${resource-service.path}")
+    @Value("${api.resource.path}")
     private String resourceServicePath;
 
-    @Value("${song-service.path}")
+    @Value("${api.song.path}")
     private String songServicePath;
 
     @Value("${proxy.url}")

@@ -1,0 +1,31 @@
+global:
+  scrape_interval: 15s
+  scrape_timeout: 15s
+  evaluation_interval: 15s
+scrape_configs:
+  # Scrape metrics from the eureka service
+  - job_name: eureka-service
+    scrape_interval: 5s
+    metrics_path: '/actuator/prometheus'
+    static_configs:
+      - targets: ['eureka-srv:8761']
+    # Scrape metrics from the prometheus server itself
+  - job_name: prometheus
+    scrape_interval: 15s
+    scrape_timeout: 15s
+    metrics_path: /metrics
+    static_configs:
+        - targets: ['localhost:9090']
+    # Discover targets from Eureka and scrape metrics from them (Whitebox monitoring)
+  - job_name: eureka-discovery
+    scrape_interval: 15s
+    scrape_timeout: 15s
+    metrics_path: '/actuator/prometheus'
+    eureka_sd_configs:
+    - server: http://eureka-srv:8761/eureka
+      refresh_interval: 30s
+    relabel_configs:
+    - source_labels: [__meta_eureka_app_name]
+      target_label: application
+    - source_labels: [__address__]
+      target_label: instance

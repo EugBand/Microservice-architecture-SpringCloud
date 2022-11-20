@@ -21,9 +21,29 @@ services:
       networks:
       - network-example
     eureka-srv:
-      build: eureka-srv/.
+      build: ./eureka-srv
       ports: 
       - '8761:8761'
+      networks:
+      - network-example
+    grafana:
+      build: ./grafana
+      ports:
+      - 3000:3000
+      volumes:
+      - ./grafana:/var/lib/grafana
+      environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+      networks:
+      - network-example
+    prometheus:
+      image: prom/prometheus
+      ports:
+      - 9090:9090
+      volumes:
+      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+      - ./prometheus:/prometheus
       networks:
       - network-example
     gateway-srv:
@@ -36,6 +56,14 @@ services:
       - eureka-srv
       environment:
       - EUREKA_URI
+      - RESOURCE_PATH
+      - RESOURCE_URL
+      - PROCESSOR_PATH
+      - PROCESSOR_URL
+      - SONG_PATH
+      - SONG_URL
+      - STORAGE_PATH
+      - STORAGE_URL
     song-srv:
       build: song-srv/.
       ports: 
@@ -55,6 +83,7 @@ services:
       - eureka-srv
       environment:
       - EUREKA_URI
+      - S3_URL
       networks:
       - network-example
     resource-srv:
@@ -67,6 +96,8 @@ services:
       - EUREKA_URI
       - RABBITMQ_NAME
       - S3_URL
+      - STORAGE_PATH
+      - PROXY_URL
       depends_on:
       - eureka-srv
       - rabbitmq
@@ -75,10 +106,15 @@ services:
       build: resource-processor-srv/.
       ports: 
         - '8091:8091'
+      environment:
+      - EUREKA_URI
+      - RABBITMQ_NAME
+      - PROXY_URL
       networks:
       - network-example
       depends_on:
         - rabbitmq
+        - eureka-srv
     config-srv:
       build: config-srv/.
       ports: 

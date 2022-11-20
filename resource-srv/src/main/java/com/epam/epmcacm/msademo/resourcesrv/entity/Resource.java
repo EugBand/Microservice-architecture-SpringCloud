@@ -32,10 +32,4 @@ public class Resource {
 
     private String storageId;
 
-//    @Column(name = "filepath")
-//    private String filePath;
-//
-//    @Lob @Basic(fetch=LAZY)
-//    @Column(name="mp3_file")
-//    private byte[] mp3data;
 }

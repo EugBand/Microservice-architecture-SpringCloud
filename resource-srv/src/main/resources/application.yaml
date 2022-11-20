@@ -51,8 +51,9 @@ eureka:
   client:
     serviceUrl:
       defaultZone: ${EUREKA_URI:http://localhost:8761/eureka}
-    instance:
-      preferIpAddress: true
+  instance:
+    hostName: ${spring.application.name}
+    preferIpAddress: false
 
 cloud:
   aws:
@@ -70,8 +71,11 @@ s3:
 proxy:
   url: ${PROXY_URL:http://localhost:8080}
 
-storage-service:
-  path: '/api/v1/storages/'
+api:
+  storage:
+    path: ${STORAGE_PATH:/api/v1/storages/}
+
+
 resilience4j:
   circuitbreaker:
     instances:
@@ -83,3 +87,16 @@ resilience4j:
         wait-duration-in-open-state: 5s
         sliding-window-type: count_based
         automatic-transition-from-open-to-half-open-enabled: 'true'
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,prometheus
+  metrics:
+    export:
+      prometheus:
+        enabled: true
+    distribution:
+      percentiles-histogram:
+        "[http.server.requests]": true
