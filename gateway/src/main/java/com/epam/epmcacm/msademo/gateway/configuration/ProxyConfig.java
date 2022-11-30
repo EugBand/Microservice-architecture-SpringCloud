@@ -25,6 +25,11 @@ class ProxyConfig {
     @Value("${api.storage.url}")
     String storageUrl;
 
+    @Value("${api.auth.path}")
+    String authPath;
+    @Value("${api.auth.url}")
+    String authUrl;
+
     private static final String PATH_EXPANDER = "**";
 
     @Bean
@@ -42,6 +47,8 @@ class ProxyConfig {
                 .route("storage-route",
                         route -> route.path(storagePath + PATH_EXPANDER)
                                 .uri(storageUrl))
+                .route("login", route -> route.path(authPath)
+                        .uri(authUrl))
                 .build();
     }
 }

@@ -1,0 +1,20 @@
+server:
+  port: 9000
+spring:
+  application:
+    name: 'auth-srv'
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: ${EUREKA_URI:http://localhost:8761/eureka}
+    instance:
+      hostName: ${spring.application.name}
+      preferIpAddress: false
+
+logging:
+  level:
+    org:
+      springframework:
+        #        web: DEBUG
+        security: DEBUG
+        oauth2: DEBUG

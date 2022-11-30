@@ -3,9 +3,6 @@ server:
 spring:
   application:
     name: 'gateway-srv'
-#logging:
-#  level:
-#    org.springframework: TRACE
 eureka:
   instance:
     preferIpAddress: false
@@ -38,3 +35,6 @@ api:
   storage:
     path: ${STORAGE_PATH:/api/v1/storages/}
     url: ${STORAGE_URL:http://localhost:8093}
+  auth:
+    path: ${AUTH_PATH:/oauth/token}
+    url: ${AUTH_URL:http://localhost:9000}

@@ -12,3 +12,7 @@ All controller layer endpoints should cover by integration tests and preferably 
 Also for all synchronous and asynchronous interaction scenarios shoud prepare contract tests (use spring cloud contract for ex.) 
 It does'n take a lot of time, and would make the contract more enforceable. 
 After deployment in dev envoronment should cover all externall API by e2e test (with perfomance testing).
+
+# How to use
+Download the repo and use docker-compose.yaml to build and run the project. After you need create two buckets: with sotrageType "STAGING" and "PERMANENT" (see 4-curls-example-add-delete-storage.txt in the root folder).
+After you shoud use other example curl-*.txt files to operate with mp3 resourses.

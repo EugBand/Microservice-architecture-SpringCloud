@@ -115,6 +115,16 @@ services:
       depends_on:
         - rabbitmq
         - eureka-srv
+    auth-srv:
+      build: auth-srv/.
+      ports: 
+        - '9000:9000'
+      environment:
+      - EUREKA_URI
+      networks:
+      - network-example
+      depends_on:
+        - eureka-srv
     config-srv:
       build: config-srv/.
       ports: 

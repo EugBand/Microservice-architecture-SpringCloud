@@ -1,0 +1,17 @@
+{
+	"ulid": "01GJMVJQ5RATXC60XGT15PVQM7",
+	"minTime": 1669284000216,
+	"maxTime": 1669291200000,
+	"stats": {
+		"numSamples": 1125120,
+		"numSeries": 1160,
+		"numChunks": 9376
+	},
+	"compaction": {
+		"level": 1,
+		"sources": [
+			"01GJMVJQ5RATXC60XGT15PVQM7"
+		]
+	},
+	"version": 1
+}
