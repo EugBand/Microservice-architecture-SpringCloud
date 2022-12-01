@@ -40,7 +40,8 @@ public class JwkSetConfig extends AuthorizationServerConfigurerAdapter {
         security
           .tokenKeyAccess("permitAll()")
           .checkTokenAccess("isAuthenticated()")
-          .allowFormAuthenticationForClients() //Adds form capability
+          .allowFormAuthenticationForClients()
+            //Adds form capability
         ;
     }
 

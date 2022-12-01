@@ -23,6 +23,8 @@ plugins {
 dependencies {
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.springframework.boot:spring-boot-starter-security")
+    implementation ("org.springframework.boot:spring-boot-starter-actuator")
+    implementation ("io.micrometer:micrometer-registry-prometheus:1.3.6")
     implementation("org.springframework.security.oauth:spring-security-oauth2:2.4.0.RELEASE")
     implementation("org.springframework.cloud:spring-cloud-starter-netflix-eureka-client:2.2.10.RELEASE")
     implementation("org.springframework.security:spring-security-jwt:1.1.0.RELEASE")

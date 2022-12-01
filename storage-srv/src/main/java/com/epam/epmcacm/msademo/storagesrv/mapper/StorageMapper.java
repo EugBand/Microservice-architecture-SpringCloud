@@ -1,6 +1,6 @@
 package com.epam.epmcacm.msademo.storagesrv.mapper;
 
-import com.epam.epmcacm.msademo.storagesrv.Dto.StorageDto;
+import com.epam.epmcacm.msademo.storagesrv.dto.StorageDto;
 import com.epam.epmcacm.msademo.storagesrv.entity.Storage;
 import org.mapstruct.Mapper;
 import org.mapstruct.ReportingPolicy;

@@ -1,6 +1,6 @@
 package com.epam.epmcacm.msademo.resourcesrv.controller;
 
-import com.epam.epmcacm.msademo.resourcesrv.dto.MetadataDto;
+import com.epam.epmcacm.msademo.resourcesrv.dto.ProcessorMetadataDto;
 import com.epam.epmcacm.msademo.resourcesrv.service.ResourceProcessorService;
 
 import lombok.RequiredArgsConstructor;
@@ -21,7 +21,7 @@ public class ResourceProcessorController {
     @Autowired ResourceProcessorService service;
 
     @GetMapping
-    public MetadataDto getMetadata(@RequestParam("file") MultipartFile file) {
+    public ProcessorMetadataDto getMetadata(@RequestParam("file") MultipartFile file) {
         return service.getMetadata(file);
     }
 }

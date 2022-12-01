@@ -1,6 +1,7 @@
 package com.epam.epmcacm.msademo.resourcesrv.service;
 
 import com.epam.epmcacm.msademo.resourcesrv.dto.MetadataDto;
+import com.epam.epmcacm.msademo.resourcesrv.dto.ProcessorMetadataDto;
 import com.epam.epmcacm.msademo.resourcesrv.dto.ResourceDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -14,6 +15,8 @@ import java.util.function.Consumer;
 @Service
 @RequiredArgsConstructor
 public class RMQConsumerService {
+
+    public static final String RESOURCE_ID = "RESOURCE_ID";
 
     @Autowired
     ResourceService resourceService;
@@ -32,6 +35,7 @@ public class RMQConsumerService {
             log.info("resource processor starts to process resource with id {}", value.getId());
             ResourceDto resourceDto = resourceService.getResource(value);
             MetadataDto metadata = resourceProcessorService.getMetadata(resourceDto.getMp3data());
+            metadata.getMetadata().put(RESOURCE_ID, resourceDto.getId());
             String postedResourceId = songService.postMetadata(metadata);
             log.info("resource with id {} posted", postedResourceId);
             publisher.publishChangingEvent(value);

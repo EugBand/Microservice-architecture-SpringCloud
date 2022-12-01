@@ -1,7 +1,7 @@
 package com.epam.epmcacm.msademo.storagesrv.service;
 
 import com.amazonaws.services.s3.model.Bucket;
-import com.epam.epmcacm.msademo.storagesrv.Dto.StorageDto;
+import com.epam.epmcacm.msademo.storagesrv.dto.StorageDto;
 import com.epam.epmcacm.msademo.storagesrv.entity.Storage;
 import com.epam.epmcacm.msademo.storagesrv.exception.BadRequestException;
 import com.epam.epmcacm.msademo.storagesrv.mapper.StorageMapper;

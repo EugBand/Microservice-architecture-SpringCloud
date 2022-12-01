@@ -27,8 +27,19 @@ public class MetadataExceptionHandler {
                 .error(HttpStatus.BAD_REQUEST.getReasonPhrase())
                 .message(ex.getMessage())
                 .path(request.getContextPath())
-
                 .build(), HttpStatus.BAD_REQUEST);
+    }
+
+        @ResponseBody
+        @ExceptionHandler({NotFoundException.class})
+        public ResponseEntity<Object> notFoundException(Exception ex, WebRequest request) {
+            return new ResponseEntity<>(ErrorResponseDto.builder()
+                    .timestamp(Instant.now().toString())
+                    .error(HttpStatus.NOT_FOUND.getReasonPhrase())
+                    .message(ex.getMessage())
+                    .path(request.getContextPath())
+
+                .build(), HttpStatus.NOT_FOUND);
     }
 
     @ResponseBody

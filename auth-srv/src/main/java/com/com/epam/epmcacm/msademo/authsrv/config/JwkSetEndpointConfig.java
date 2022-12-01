@@ -15,5 +15,11 @@ class JwkSetEndpointConfig extends AuthorizationServerSecurityConfiguration {
         .and()
         .authorizeRequests()
         .mvcMatchers("/.well-known/jwks.json").permitAll();
+
+        http
+                .requestMatchers()
+                .antMatchers("/actuator/**")
+                .and()
+                .anonymous();
     }
 }

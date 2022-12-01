@@ -31,8 +31,7 @@ public class SongController {
     @PostMapping
     public String addMetadata(HttpServletRequest request, HttpServletResponse response, @RequestBody MetadataDto metadataDto) {
         log.info("Begin to create song metadata");
-        String metadata = service.createMetadata(metadataDto);
-        return metadata;
+        return service.createMetadata(metadataDto);
     }
 
     @GetMapping("/{songId}")

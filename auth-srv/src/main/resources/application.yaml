@@ -7,9 +7,22 @@ eureka:
   client:
     serviceUrl:
       defaultZone: ${EUREKA_URI:http://localhost:8761/eureka}
-    instance:
-      hostName: ${spring.application.name}
-      preferIpAddress: false
+  instance:
+    hostName: ${spring.application.name}
+    preferIpAddress: false
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,prometheus
+  metrics:
+    export:
+      prometheus:
+        enabled: true
+    distribution:
+      percentiles-histogram:
+        "[http.server.requests]": true
 
 logging:
   level:

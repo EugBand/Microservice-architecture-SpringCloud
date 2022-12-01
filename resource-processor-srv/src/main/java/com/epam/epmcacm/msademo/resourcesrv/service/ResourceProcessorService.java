@@ -1,6 +1,7 @@
 package com.epam.epmcacm.msademo.resourcesrv.service;
 
 import com.epam.epmcacm.msademo.resourcesrv.dto.MetadataDto;
+import com.epam.epmcacm.msademo.resourcesrv.dto.ProcessorMetadataDto;
 import com.epam.epmcacm.msademo.resourcesrv.exception.BadRequestException;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.tika.exception.TikaException;
@@ -28,7 +29,7 @@ public class ResourceProcessorService {
     public static final String ERROR_PARSE_MP3_METADATA = "Error parse mp3 metadata";
 
     //For non-prod endpoint
-    public MetadataDto getMetadata(MultipartFile multipartFile){
+    public ProcessorMetadataDto getMetadata(MultipartFile multipartFile){
         ContentHandler handler = new DefaultHandler();
         Metadata metadata = new Metadata();
         Parser parser = new Mp3Parser();
@@ -47,7 +48,7 @@ public class ResourceProcessorService {
             throw new BadRequestException(ERROR_PARSE_MP3_METADATA, e);
         }
 
-        return new MetadataDto(metadata);
+        return new ProcessorMetadataDto(metadata);
     }
 
     //Non-prod endpoint

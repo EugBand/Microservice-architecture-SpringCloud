@@ -1,0 +1,140 @@
+version: '3'
+services:
+    rabbitmq:
+      image: 'rabbitmq:3-management'
+      ports: 
+        - '15672:15672'
+        - '5672:5672'
+      networks:
+      - network-example
+    localstack:
+      image: localstack/localstack:latest
+      environment:
+        - DEBUG=1
+        - SERVICES=s3
+        - DATA_DIR=/tmp/localstack/data
+      ports:
+       - '4566-4583:4566-4583'
+       - '8055:8080'
+      volumes:
+      - './.localstack:/tmp/localstack'
+      networks:
+      - network-example
+    eureka-srv:
+      build: ./eureka-srv
+      ports: 
+      - '8761:8761'
+      networks:
+      - network-example
+    grafana:
+      build: ./grafana
+      ports:
+      - 3000:3000
+      volumes:
+      - ./grafana:/var/lib/grafana
+      environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+      networks:
+      - network-example
+    prometheus:
+      image: prom/prometheus
+      ports:
+      - 9090:9090
+      volumes:
+      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+      - ./prometheus:/prometheus
+      networks:
+      - network-example
+    gateway-srv:
+      build: gateway/.
+      ports: 
+        - '8080:8080'
+      networks:
+      - network-example
+      depends_on:
+      - eureka-srv
+      environment:
+      - EUREKA_URI
+      - RESOURCE_PATH
+      - RESOURCE_URL
+      - PROCESSOR_PATH
+      - PROCESSOR_URL
+      - SONG_PATH
+      - SONG_URL
+      - STORAGE_PATH
+      - STORAGE_URL
+      - AUTH_URL
+      - AUTH_PATH
+    song-srv:
+      build: song-srv/.
+      ports: 
+      - '8092:8092'
+      depends_on:
+      - eureka-srv
+      environment:
+      - EUREKA_URI
+      - RABBITMQ_NAME
+      networks:
+      - network-example
+    storage-srv:
+      build: storage-srv/.
+      ports:
+      - '8093:8093'
+      depends_on:
+      - eureka-srv
+      environment:
+      - EUREKA_URI
+      - S3_URL
+      - AUTH_JWK_URI
+      networks:
+      - network-example
+    resource-srv:
+      build: resource-srv/.
+      ports: 
+        - '8090:8090'
+      networks:
+      - network-example
+      environment:
+      - EUREKA_URI
+      - RABBITMQ_NAME
+      - S3_URL
+      - STORAGE_PATH
+      - PROXY_URL
+      depends_on:
+      - eureka-srv
+      - rabbitmq
+      - localstack
+    resource-processor-srv:
+      build: resource-processor-srv/.
+      ports: 
+        - '8091:8091'
+      environment:
+      - EUREKA_URI
+      - RABBITMQ_NAME
+      - PROXY_URL
+      networks:
+      - network-example
+      depends_on:
+        - rabbitmq
+        - eureka-srv
+    auth-srv:
+      build: auth-srv/.
+      ports: 
+        - '9000:9000'
+      environment:
+      - EUREKA_URI
+      networks:
+      - network-example
+      depends_on:
+        - eureka-srv
+    config-srv:
+      build: config-srv/.
+      ports: 
+        - '8888:8888'
+      networks:
+      - network-example
+networks:
+  network-example:
+    driver: bridge
+    external: true

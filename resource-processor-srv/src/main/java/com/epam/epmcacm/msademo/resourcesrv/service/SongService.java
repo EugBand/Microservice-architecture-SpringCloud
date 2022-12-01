@@ -1,6 +1,7 @@
 package com.epam.epmcacm.msademo.resourcesrv.service;
 
 import com.epam.epmcacm.msademo.resourcesrv.dto.MetadataDto;
+import com.epam.epmcacm.msademo.resourcesrv.dto.ProcessorMetadataDto;
 import com.epam.epmcacm.msademo.resourcesrv.exception.ServiceAvailableException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,15 +33,19 @@ public class SongService {
     }
 
     public String postMetadata(MetadataDto metadataDto) {
-        return songApiClient
+        String id = songApiClient
                 .post()
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(BodyInserters.fromValue(metadataDto))
                 .retrieve()
                 .bodyToMono(String.class)
-                .retryWhen(Retry.backoff(MAX_ATTEMPTS, REQUEST_TIMEOUT).onRetryExhaustedThrow((retryBackoffSpec, retrySignal) -> {
-                    throw new ServiceAvailableException(FAILED_TO_PROCESS_AFTER_MAX_RETRIES, HttpStatus.SERVICE_UNAVAILABLE.value());}))
+                .retryWhen(Retry.backoff(MAX_ATTEMPTS, REQUEST_TIMEOUT)
+                        .onRetryExhaustedThrow((retryBackoffSpec, retrySignal) -> {
+                            throw new ServiceAvailableException(FAILED_TO_PROCESS_AFTER_MAX_RETRIES,
+                                    HttpStatus.SERVICE_UNAVAILABLE.value());
+                        }))
                 .block(REQUEST_TIMEOUT);
+        return id;
     }
 }
 

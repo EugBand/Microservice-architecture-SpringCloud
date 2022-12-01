@@ -13,6 +13,7 @@ services:
         - DEBUG=1
         - SERVICES=s3
         - DATA_DIR=/tmp/localstack/data
+        - LEGACY_DIRECTORIES=1
       ports:
        - '4566-4583:4566-4583'
        - '8055:8080'
@@ -64,6 +65,8 @@ services:
       - SONG_URL
       - STORAGE_PATH
       - STORAGE_URL
+      - AUTH_URL
+      - AUTH_PATH
     song-srv:
       build: song-srv/.
       ports: 
@@ -84,6 +87,7 @@ services:
       environment:
       - EUREKA_URI
       - S3_URL
+      - AUTH_JWK_URI
       networks:
       - network-example
     resource-srv:

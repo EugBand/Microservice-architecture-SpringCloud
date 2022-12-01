@@ -1,7 +1,7 @@
 package com.epam.epmcacm.msademo.songsrv;
 
 import com.epam.epmcacm.msademo.songsrv.dto.MetadataDto;
-import com.epam.epmcacm.msademo.songsrv.exception.entity.SongMetadata;
+import com.epam.epmcacm.msademo.songsrv.entity.SongMetadata;
 import com.epam.epmcacm.msademo.songsrv.repository.SongMetadataRepository;
 import com.epam.epmcacm.msademo.songsrv.service.SongMetadataService;
 import org.assertj.core.api.SoftAssertions;
